@@ -2,7 +2,10 @@
 Criação do editeproduto.php
 
 <?php
+include('segurancadez.php');
+include('cabecalho.php');
 include('conn.php');
+
 if($_SERVER['REQUEST_METHOD']=='POST'){
     $id = $_POST['id'];
     $nome = $_POST['nome'];
