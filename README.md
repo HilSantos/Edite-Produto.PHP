@@ -2,46 +2,70 @@
 Criação do editeproduto.php
 
 <?php
+// Inclui arquivos de segurança, cabeçalho da página e conexão com o banco de dados //
 include('segurancadez.php');
 include('cabecalho.php');
 include('conn.php');
 
+// Verifica se o formulário foi enviado via método POST (edição do produto) //
 if($_SERVER['REQUEST_METHOD']=='POST'){
+
+    // Captura os dados enviados pelo formulário //
     $id = $_POST['id'];
     $nome = $_POST['nome'];
     $descricao = $_POST['descricao'];
     $caracteristica = $_POST['caracteristica'];
     $estoque = $_POST['estoque'];
     $valor = $_POST['valor'];
-    $imagem = $_FILES['imagem']['name'];
+    $imagem = $_FILES['imagem']['name']; // Nome do arquivo de imagem enviado //
     $barcode = $_POST['barcode'];
-    $img_atual = $_POST['imagem_atual'];
+    $img_atual = $_POST['imagem_atual']; // Nome da imagem atual (caso nenhuma nova seja enviada) //
 
-    if($imagem==""){
+    // Se nenhuma nova imagem foi enviada, mantém a imagem atual //
+    if($imagem == ""){
         $imagem = $img_atual;
     }
 
+    // Monta a query para atualizar os dados do produto //
     $sql = "UPDATE `tb_produtos` SET 
-    `nome_produto`='$nome',`descricao_produto`='$descricao',`caracteristica_produto`='$caracteristica',`estoque_produto`=
-    '$estoque',`valor_produto`='$valor',`imagem_produto`='$imagem',`barcode_produto`='$barcode' WHERE id_produto = $id";
+        `nome_produto`='$nome',
+        `descricao_produto`='$descricao',
+        `caracteristica_produto`='$caracteristica',
+        `estoque_produto`='$estoque',
+        `valor_produto`='$valor',
+        `imagem_produto`='$imagem',
+        `barcode_produto`='$barcode' 
+        WHERE id_produto = $id";
 
-mysqli_query($link,$sql);
-mysqli_close($link);
-header('Location: listaprodutos.php');
-exit;
+    // Executa a atualização no banco de dados //
+    mysqli_query($link, $sql);
+
+    // Fecha a conexão com o banco //
+    mysqli_close($link);
+
+    // Redireciona para a lista de produtos após a edição //
+    header('Location: listaprodutos.php');
+    exit;
 }
 
+// Se não houver ID passado via GET, redireciona para a lista de produtos //
 if (!isset($_GET['id'])) {
     header('Location: listaprodutos.php');
     exit();
 }
 
+// Obtém o ID do produto a partir da URL //
 $id = $_GET['id'];
+
+// Consulta os dados do produto no banco de dados //
 $sql = "SELECT * FROM tb_produtos WHERE id_produto = $id";
 $result = mysqli_query($link, $sql);
-$tbl = mysqli_fetch_array($result);
+$tbl = mysqli_fetch_array($result); // Armazena os dados do produto //
+
+// Fecha a conexão com o banco //
 mysqli_close($link);
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
